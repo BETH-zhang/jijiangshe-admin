@@ -10,9 +10,6 @@ import {
   Input,
   Progress,
   Button,
-  Icon,
-  Dropdown,
-  Menu,
   Checkbox,
   Select,
   DatePicker,
@@ -34,7 +31,7 @@ const { Option } = Select;
   tags,
   loading: loading.models.list,
   tasksLoading: loading.effects['tasks/fetchTasks'],
-  tagsLoading: loading.effects['tags/fetchTags'],
+  tagsLoading: loading.effects['tags/fetchAllTags'],
 }))
 export default class Tasks extends PureComponent {
   constructor(props) {
@@ -54,7 +51,7 @@ export default class Tasks extends PureComponent {
       type: 'tasks/fetchTasks',
     });
     dispatch({
-      type: 'tags/fetchTags',
+      type: 'tags/fetchAllTags',
     });
   }
 
@@ -87,9 +84,25 @@ export default class Tasks extends PureComponent {
     });
   };
 
+  updateTask = payload => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'tasks/fetchUpdateTask',
+      payload,
+    });
+  };
+
+  deleteTask = id => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'tasks/fetchDeleteTask',
+      payload: { id },
+    });
+  };
+
   render() {
     const {
-      tasks: { list, addTask, data },
+      tasks: { list, addTask, data, status },
       tasksLoading,
       tags,
     } = this.props;
@@ -115,44 +128,24 @@ export default class Tasks extends PureComponent {
 
     const paginationProps = null;
 
-    const ListContent = ({ data: { userId, createdAt, percent, status } }) => (
+    const ListContent = ({ data: { userId, createdAt, deadline, percent } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
           <span>Owner</span>
-          <p>{userId}</p>
+          <p>{userId || 'BETH'}</p>
         </div>
         <div className={styles.listContentItem}>
           <span>开始时间</span>
           <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
         </div>
         <div className={styles.listContentItem}>
-          <Progress
-            percent={percent || 100}
-            status={status}
-            strokeWidth={6}
-            style={{ width: 180 }}
-          />
+          <span>截止时间</span>
+          <p>{moment(deadline).format('YYYY-MM-DD HH:mm')}</p>
+        </div>
+        <div className={styles.listContentItem}>
+          <Progress percent={percent || 0} status={0} strokeWidth={6} style={{ width: 180 }} />
         </div>
       </div>
-    );
-
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          <a>编辑</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a>删除</a>
-        </Menu.Item>
-      </Menu>
-    );
-
-    const MoreBtn = () => (
-      <Dropdown overlay={menu}>
-        <a>
-          更多 <Icon type="down" />
-        </a>
-      </Dropdown>
     );
 
     return (
@@ -248,16 +241,33 @@ export default class Tasks extends PureComponent {
               loading={tasksLoading}
               pagination={paginationProps}
               dataSource={list}
-              renderItem={item => (
-                <List.Item actions={[<a>编辑</a>, <MoreBtn />]}>
-                  <List.Item.Meta
-                    avatar={<Checkbox />}
-                    title={<span>{item.task}</span>}
-                    description={item.description}
-                  />
-                  <ListContent data={item} />
-                </List.Item>
-              )}
+              renderItem={item => {
+                if (item.status === status) {
+                  return (
+                    <List.Item
+                      actions={[<a>编辑</a>, <a onClick={() => this.deleteTask(item.id)}>删除</a>]}
+                    >
+                      <List.Item.Meta
+                        avatar={
+                          <Checkbox
+                            checked={item.status}
+                            onClick={e =>
+                              this.updateTask({
+                                status: e.target.checked ? 1 : 0,
+                                id: item.id,
+                              })
+                            }
+                          />
+                        }
+                        title={<span>{item.task}</span>}
+                        description={item.description}
+                      />
+                      <ListContent data={item} />
+                    </List.Item>
+                  );
+                }
+                return null;
+              }}
             />
           </Card>
         </div>

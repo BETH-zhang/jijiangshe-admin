@@ -1,5 +1,6 @@
 import { message } from 'antd';
-import { queryAllList, createItem } from '../services/api';
+import sortBy from 'lodash/sortBy';
+import { queryAllList, createItem, updateDetail, deleteItem } from '../services/api';
 
 export default {
   namespace: 'tasks',
@@ -13,18 +14,20 @@ export default {
 
   effects: {
     *fetchTasks(_, { call, put }) {
-      const response = yield call(queryAllList, { sql: 'Todo' });
-      yield put({
-        type: 'saveTasks',
-        payload: response,
-      });
+      const { response } = yield call(queryAllList, { sql: 'Todo' });
+      if (response) {
+        yield put({
+          type: 'saveTasks',
+          payload: sortBy(response, item => item.status),
+        });
+      }
     },
     *fetchAddTask(_, { call, put, select }) {
       const {
         tasks: { data },
       } = yield select();
-      const response = yield call(createItem, { sql: 'Todo', ...data });
-      if (response && !response.error) {
+      const { response } = yield call(createItem, { sql: 'Todo', ...data });
+      if (response) {
         message.info('添加成功');
         yield put({
           type: 'addTask',
@@ -33,6 +36,24 @@ export default {
         yield put({
           type: 'cancelAddTask',
         });
+        yield put({
+          type: 'tasks/fetchTasks',
+        });
+      }
+    },
+    *fetchUpdateTask({ payload }, { call, put }) {
+      const { response } = yield call(updateDetail, { sql: 'Todo', ...payload });
+      if (response) {
+        message.info('更新成功');
+        yield put({
+          type: 'tasks/fetchTasks',
+        });
+      }
+    },
+    *fetchDeleteTask({ payload }, { call, put }) {
+      const { response } = yield call(deleteItem, { sql: 'Todo', ...payload });
+      if (response) {
+        message.info('删除成功');
         yield put({
           type: 'tasks/fetchTasks',
         });

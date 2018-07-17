@@ -117,7 +117,7 @@ function callApi(cfg, msg) {
   };
   return axios(newConfig)
     .then(response => checkStatus(response))
-    .then(response => response.data)
+    .then(response => ({ response: response.data }))
     .catch(err => {
       let msgTmp = msg;
       if (err.response) {

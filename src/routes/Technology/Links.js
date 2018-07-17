@@ -53,7 +53,7 @@ const members = [
     tags,
     activitiesLoading: loading.effects['activities/fetchList'],
     linksLoading: loading.effects['links/fetchAllLinks'],
-    tagsLoading: loading.effects['tags/fetchTags'],
+    tagsLoading: loading.effects['tags/fetchAllTags'],
   };
 })
 export default class Workplace extends PureComponent {
@@ -69,7 +69,7 @@ export default class Workplace extends PureComponent {
       type: 'links/fetchAllLinks',
     });
     dispatch({
-      type: 'tags/fetchTags',
+      type: 'tags/fetchAllTags',
     });
   }
 

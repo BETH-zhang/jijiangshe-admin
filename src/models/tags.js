@@ -10,9 +10,9 @@ export default {
   },
 
   effects: {
-    *fetchTags(_, { call, put }) {
-      const response = yield call(queryAllList, { sql: 'Tag' });
-      const tags = arrayToObjectByField(response.slice(0), 'id');
+    *fetchAllTags(_, { call, put }) {
+      const { response } = yield call(queryAllList, { sql: 'Tag' });
+      const tags = arrayToObjectByField(response, 'id');
       yield put({
         type: 'saveTags',
         payload: tags,
