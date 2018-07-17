@@ -16,6 +16,7 @@ import {
   Checkbox,
   Select,
   DatePicker,
+  message,
 } from 'antd';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -106,7 +107,7 @@ export default class Tasks extends PureComponent {
         <RadioGroup defaultValue="all">
           <RadioButton value="all">全部</RadioButton>
           <RadioButton value="progress">进行中</RadioButton>
-          <RadioButton value="waiting">等待中</RadioButton>
+          <RadioButton value="waiting">已完成</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
@@ -186,7 +187,7 @@ export default class Tasks extends PureComponent {
               </Col>
               <Col sm={7} offset={1}>
                 <Select
-                  value={data.tagId || '请选择分类'}
+                  value={data.tagId ? tags.data[data.tagId][0].name : '请选择分类'}
                   style={{ width: '100%' }}
                   onChange={val => this.addTaskData({ tagId: Number(val) })}
                 >
@@ -198,7 +199,7 @@ export default class Tasks extends PureComponent {
               </Col>
               <Col sm={7} offset={1}>
                 <DatePicker
-                  value={data.deadline ? moment(data.deadline) : moment()}
+                  value={data.deadline && moment(data.deadline)}
                   style={{ width: '100%' }}
                   onChange={m => this.addTaskData({ deadline: m.format() })}
                 />
@@ -206,8 +207,12 @@ export default class Tasks extends PureComponent {
 
               <Col sm={24} style={{ textAlign: 'center' }}>
                 <Button
-                  type="primary"
-                  onClick={this.addTask}
+                  type={data.task && data.tagId && data.deadline && 'primary'}
+                  onClick={
+                    data.task && data.tagId && data.deadline
+                      ? this.addTask
+                      : () => message.error('提交字段有空值')
+                  }
                   style={{ marginTop: '24px' }}
                   icon="plus"
                 >
@@ -220,20 +225,23 @@ export default class Tasks extends PureComponent {
           <Card
             className={styles.listCard}
             bordered={false}
-            title="标准列表"
+            title={
+              <div>
+                任务列表&nbsp;&nbsp;
+                <Button
+                  type="dashed"
+                  onClick={this.openAddTask}
+                  style={{ marginBottom: 8 }}
+                  icon="plus"
+                >
+                  {addTask ? '取消添加' : '添加'}
+                </Button>
+              </div>
+            }
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
           >
-            <Button
-              type="dashed"
-              onClick={this.openAddTask}
-              style={{ width: '100%', marginBottom: 8 }}
-              icon="plus"
-            >
-              {addTask ? '取消添加' : '添加'}
-            </Button>
-
             <List
               size="large"
               rowKey="id"

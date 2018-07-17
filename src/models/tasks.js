@@ -8,6 +8,7 @@ export default {
     list: {},
     addTask: false,
     data: {},
+    status: 0,
   },
 
   effects: {
