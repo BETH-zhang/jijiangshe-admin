@@ -186,10 +186,9 @@ export default class Tasks extends PureComponent {
               </Col>
               <Col sm={7} offset={1}>
                 <Select
-                  defaultValue="请选择分类"
-                  value={data.tagId}
+                  value={data.tagId || '请选择分类'}
                   style={{ width: '100%' }}
-                  onChange={val => this.addTaskData({ tagId: val })}
+                  onChange={val => this.addTaskData({ tagId: Number(val) })}
                 >
                   {tags.list.map(
                     item =>

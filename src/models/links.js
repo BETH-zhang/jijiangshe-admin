@@ -11,7 +11,7 @@ export default {
   effects: {
     *fetchAllLinks(_, { call, put }) {
       const response = yield call(queryAllList, { sql: 'WebSite' });
-      const links = arrayToObjectByField(response.data, 'tagId', 'tagId');
+      const links = arrayToObjectByField(response, 'tagId', 'tagId');
       yield put({
         type: 'saveAllLinks',
         payload: links,

@@ -1,80 +1,64 @@
 import { stringify } from 'qs';
 import assign from 'lodash/assign';
-import request from '../utils/request';
+import request, { get, post } from '../utils/request';
 import config from '../common/config';
 
-export async function queryAllList(params) {
-  return request(
-    `${config.api}/api/common/gets?${stringify(
-      assign(params, {
-        token: config.token,
-      })
-    )}`
-  );
-}
-
-export async function queryDetail(params) {
-  return request(
-    `${config.api}/api/common/get?${stringify(
-      assign(params, {
-        token: config.token,
-      })
-    )}`
-  );
-}
-
-export async function createItem(params) {
-  return request(
-    `${config.api}/api/common/post?${stringify({
+export const queryAllList = data =>
+  get({
+    url: '/api/common/gets',
+    data: {
+      ...data,
       token: config.token,
-      sql: params.sql,
-    })}`,
-    {
-      method: 'POST',
-      body: params,
-    }
-  );
+    },
+  });
+
+export async function queryDetail(data) {
+  return get({
+    url: '/api/common/get',
+    data: assign(data, {
+      token: config.token,
+    }),
+  });
 }
 
-export async function createList(params) {
-  return request(
-    `${config.api}/api/common/posts?${stringify({
+export async function createItem(data) {
+  return post({
+    url: `/api/common/post?${stringify({
       token: config.token,
-      sql: params.sql,
+      sql: data.sql,
     })}`,
-    {
-      method: 'POST',
-      body: {
-        data: params.data,
-      },
-    }
-  );
+    data,
+  });
 }
 
-export async function updateDetail(params) {
-  return request(
-    `${config.api}/api/common/update?${stringify({
+export async function createList(data) {
+  return post({
+    url: `/api/common/posts?${stringify({
       token: config.token,
-      sql: params.sql,
+      sql: data.sql,
     })}`,
-    {
-      method: 'POST',
-      body: params,
-    }
-  );
+    data,
+  });
 }
 
-export async function deleteItem(params) {
-  return request(
-    `${config.api}/api/common/delete?${stringify({
+export async function updateDetail(data) {
+  return post({
+    url: `/api/common/update?${stringify({
       token: config.token,
-      sql: params.sql,
+      sql: data.sql,
     })}`,
-    {
-      method: 'POST',
-      body: params,
-    }
-  );
+    data,
+  });
+}
+
+export async function deleteItem(data) {
+  return post({
+    url: `/api/common/delete?${stringify({
+      token: config.token,
+      sql: data.sql,
+    })}`,
+    data,
+  });
 }
 
 export async function queryProjectNotice() {

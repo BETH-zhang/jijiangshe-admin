@@ -1,6 +1,8 @@
+import axios from 'axios';
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import { routerRedux } from 'dva/router';
+import config from '../common/config';
 import store from '..';
 
 const codeMessage = {
@@ -22,6 +24,9 @@ const codeMessage = {
 };
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
+    if (response.data && response.data.code === 0) {
+      return response.data;
+    }
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -45,7 +50,9 @@ function checkStatus(response) {
 export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
+    mode: 'cors',
   };
+
   const newOptions = { ...defaultOptions, ...options };
   if (
     newOptions.method === 'POST' ||
@@ -98,3 +105,65 @@ export default function request(url, options) {
       }
     });
 }
+
+function callApi(cfg, msg) {
+  const newConfig = {
+    ...cfg,
+    headers: {
+      'x-token': localStorage.getItem('smart-token'),
+      'x-schoolid': localStorage.getItem('smart-schoolId'),
+      ...cfg.headers,
+    },
+  };
+  return axios(newConfig)
+    .then(response => checkStatus(response))
+    .then(response => response.data)
+    .catch(err => {
+      let msgTmp = msg;
+      if (err.response) {
+        msgTmp = err.response.data.msg;
+      } else {
+        msgTmp = err.message || err.msg;
+      }
+      message.warn(msgTmp);
+      return { error: msgTmp };
+    });
+}
+
+/**
+ * 公用get请求
+ * @param url       接口地址
+ * @param msg       接口异常提示
+ * @param headers   接口所需header配置
+ */
+// withCredentials: true 是否开启跨域cors跨域设置
+export const get = ({ url, host, data, msg = '接口异常', headers }) =>
+  callApi(
+    {
+      url: typeof host !== 'undefined' ? `${host}${url}` : `${config.api}${url}`,
+      method: 'GET',
+      params: data || {},
+      withCredentials: true,
+      headers,
+    },
+    msg
+  );
+
+/**
+ * 公用post请求
+ * @param url       接口地址
+ * @param data      接口参数
+ * @param msg       接口异常提示
+ * @param headers   接口所需header配置
+ */
+export const post = ({ url, host, data, msg = '接口异常', headers }) =>
+  callApi(
+    {
+      url: typeof host !== 'undefined' ? `${host}${url}` : `${config.api}${url}`,
+      method: 'POST',
+      data: data || {},
+      withCredentials: true,
+      headers,
+    },
+    msg
+  );

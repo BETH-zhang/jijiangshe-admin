@@ -12,14 +12,14 @@ export default {
   effects: {
     *fetchTags(_, { call, put }) {
       const response = yield call(queryAllList, { sql: 'Tag' });
-      const tags = arrayToObjectByField(response.data.slice(0), 'id');
+      const tags = arrayToObjectByField(response.slice(0), 'id');
       yield put({
         type: 'saveTags',
         payload: tags,
       });
       yield put({
         type: 'saveTagsList',
-        payload: response.data || [],
+        payload: response || [],
       });
     },
   },

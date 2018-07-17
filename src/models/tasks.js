@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryAllList, createList } from '../services/api';
+import { queryAllList, createItem } from '../services/api';
 
 export default {
   namespace: 'tasks',
@@ -15,15 +15,15 @@ export default {
       const response = yield call(queryAllList, { sql: 'Todo' });
       yield put({
         type: 'saveTasks',
-        payload: response.data,
+        payload: response,
       });
     },
     *fetchAddTask(_, { call, put, select }) {
       const {
         tasks: { data },
       } = yield select();
-      const response = yield call(createList, { sql: 'Todo', data });
-      if (response) {
+      const response = yield call(createItem, { sql: 'Todo', ...data });
+      if (response && !response.error) {
         message.info('添加成功');
         yield put({
           type: 'addTask',
@@ -53,6 +53,7 @@ export default {
         data: {
           ...state.data,
           ...action.payload,
+          userId: 0,
         },
       };
     },
