@@ -6,7 +6,7 @@ export default {
   namespace: 'tasks',
 
   state: {
-    list: {},
+    list: [],
     addTask: false,
     data: {},
     status: 0,
@@ -62,6 +62,12 @@ export default {
   },
 
   reducers: {
+    updateStatus(state, action) {
+      return {
+        ...state,
+        status: action.payload,
+      };
+    },
     cancelAddTask(state) {
       return {
         ...state,
@@ -69,7 +75,6 @@ export default {
       };
     },
     addData(state, action) {
-      console.log(state, action.payload);
       return {
         ...state,
         data: {
