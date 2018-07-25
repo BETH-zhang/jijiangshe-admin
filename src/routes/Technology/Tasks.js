@@ -241,33 +241,29 @@ export default class Tasks extends PureComponent {
               loading={tasksLoading}
               pagination={paginationProps}
               dataSource={list}
-              renderItem={item => {
-                if (item.status === status) {
-                  return (
-                    <List.Item
-                      actions={[<a>编辑</a>, <a onClick={() => this.deleteTask(item.id)}>删除</a>]}
-                    >
-                      <List.Item.Meta
-                        avatar={
-                          <Checkbox
-                            checked={item.status}
-                            onClick={e =>
-                              this.updateTask({
-                                status: e.target.checked ? 1 : 0,
-                                id: item.id,
-                              })
-                            }
-                          />
+              renderItem={item => (
+                <List.Item
+                  className={item.status === status && 'active'}
+                  actions={[<a>编辑</a>, <a onClick={() => this.deleteTask(item.id)}>删除</a>]}
+                >
+                  <List.Item.Meta
+                    avatar={
+                      <Checkbox
+                        checked={item.status}
+                        onClick={e =>
+                          this.updateTask({
+                            status: e.target.checked ? 1 : 0,
+                            id: item.id,
+                          })
                         }
-                        title={<span>{item.task}</span>}
-                        description={item.description}
                       />
-                      <ListContent data={item} />
-                    </List.Item>
-                  );
-                }
-                return null;
-              }}
+                    }
+                    title={<span>{item.task}</span>}
+                    description={item.description}
+                  />
+                  <ListContent data={item} />
+                </List.Item>
+              )}
             />
           </Card>
         </div>
