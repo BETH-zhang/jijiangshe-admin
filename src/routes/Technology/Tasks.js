@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
+import filter from 'lodash/filter';
 import {
   List,
   Card,
@@ -147,6 +148,8 @@ export default class Tasks extends PureComponent {
         listByStatus.push(item);
       }
     });
+
+    console.log(filter(list, item => status === -1 || item.status === status), '==');
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
