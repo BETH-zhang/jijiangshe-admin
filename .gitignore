@@ -21,6 +21,8 @@ yarn.lock
 package-lock.json
 *bak
 
-# visual studio code 
+# visual studio code
 .history
 /src/common/config.js
+
+/doc
