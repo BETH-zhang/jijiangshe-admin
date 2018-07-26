@@ -2,7 +2,7 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
-    name: '技术相关',
+    name: '项目板块',
     icon: 'dashboard',
     path: 'technology',
     children: [
@@ -15,8 +15,8 @@ const menuData = [
         path: 'share',
       },
       {
-        name: 'TODO',
-        path: 'todo',
+        name: '任务池',
+        path: 'tasks',
       },
       {
         name: '工作报告',
@@ -26,10 +26,29 @@ const menuData = [
         name: '新技术调研',
         path: 'innovate',
       },
+      {
+        name: '文档库',
+        path: 'document',
+      },
     ],
   },
   {
-    name: '产品相关',
+    name: '全局板块',
+    icon: 'dashboard',
+    path: '',
+    children: [
+      {
+        name: '项目列表',
+        path: '',
+      },
+      {
+        name: '成员列表',
+        path: '',
+      },
+    ],
+  },
+  {
+    name: '产品板块',
     icon: 'dashboard',
     path: 'product',
     children: [

@@ -77,8 +77,11 @@ export const getRouterData = app => {
     '/technology/links': {
       component: dynamicWrapper(app, ['links', 'tags'], () => import('../routes/Technology/Links')),
     },
-    '/technology/todo': {
+    '/technology/tasks': {
       component: dynamicWrapper(app, ['tasks', 'tags'], () => import('../routes/Technology/Tasks')),
+    },
+    '/technology/document': {
+      component: dynamicWrapper(app, [], () => import('../routes/Technology/Document')),
     },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
