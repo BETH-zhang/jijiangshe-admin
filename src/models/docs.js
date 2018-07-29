@@ -1,13 +1,18 @@
 import { message } from 'antd';
 // import sortBy from 'lodash/sortBy';
-import { queryAllList, createItem, updateDetail, deleteItem } from '../services/api';
+import { queryAllList, createDoc, updateDetail, deleteItem } from '../services/api';
+import config from '../common/config';
 
 export default {
   namespace: 'docs',
 
   state: {
     list: [],
-    data: {},
+    data: {
+      title: '',
+      content: '',
+      style: '',
+    },
   },
 
   effects: {
@@ -20,17 +25,17 @@ export default {
         });
       }
     },
-    *fetchAddDoc(_, { call, put, select }) {
+    *fetchAddDoc({ payload }, { call, select }) {
       const {
         docs: { data },
       } = yield select();
-      const { response } = yield call(createItem, { sql: 'Doc', ...data });
+      const { response } = yield call(createDoc, { ...data, ...payload });
       if (response) {
-        message.info('添加成功');
-        yield put({
-          type: 'addDoc',
-          payload: false,
-        });
+        if (response.preview) {
+          window.open(`${config.api}${response.preview}`);
+        } else {
+          message.info('添加成功');
+        }
       }
     },
     *fetchUpdateDoc({ payload }, { call, put }) {

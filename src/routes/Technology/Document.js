@@ -1,11 +1,17 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Card, Row, Col, Input } from 'antd';
+import { Button, Card, Row, Col, Input, Select } from 'antd';
+import config from '../../common/config';
 import marked from '../../assets/marked.min';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Document.less';
+import { markdownStyle } from '../../common/constant';
+
+const markdownPath = `${config.api}/markdown-css-themes/index.html`;
 
 window.hljs.initHighlightingOnLoad();
+
+const Option = Select.Option;
 const rendererMD = new marked.Renderer();
 const markedOptions = {
   renderer: rendererMD,
@@ -26,9 +32,23 @@ const markedOptions = {
   submitting: loading.effects['form/submitRegularForm'],
 }))
 export default class Document extends PureComponent {
+  componentWillMount() {
+    this.changeContent({ previewContent: '' });
+    // const markdownLink = document.getElementById('markdownStyle');
+    // markdownLink.href = `${markdownPath}/markdown.css`;
+  }
+
   getPreviewContent = content => {
     const html = marked(content, markedOptions);
     return html.replace(/language-/g, 'hljs language-');
+  };
+
+  saveDoc = preview => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'docs/fetchAddDoc',
+      payload: { preview },
+    });
   };
 
   changeContent = payload => {
@@ -47,20 +67,16 @@ export default class Document extends PureComponent {
     }
   };
 
-  keepLastIndex = obj => {
-    if (window.getSelection) {
-      // ie11 10 9 ff safari
-      obj.focus(); // 解决ff不获取焦点无法定位问题
-      const range = window.getSelection(); // 创建range
-      range.selectAllChildren(obj); // range 选择obj下所有子内容
-      range.collapseToEnd(); // 光标移至最后
-    } else if (document.selection) {
-      // ie10 9 8 7 6 5
-      const range = document.selection.createRange(); // 创建选择对象
-      // var range = document.body.createTextRange();
-      range.moveToElementText(obj); // range定位到obj
-      range.collapse(false); // 光标移至最后
-      range.select();
+  scrollToY = (toY, step = 10) => {
+    const diff = this.right.scrollTop - toY;
+    const realStep = diff > 0 ? -step : step;
+    if (Math.abs(diff) > step) {
+      this.right.scrollTop = this.right.scrollTop + realStep;
+      requestAnimationFrame(() => {
+        this.scrollToY(toY, step);
+      });
+    } else {
+      this.right.scrollTop = toY;
     }
   };
 
@@ -81,8 +97,24 @@ export default class Document extends PureComponent {
             <Col sm={7}>
               <Input
                 placeholder="为你的文档起一个好名字吧"
-                onChange={e => this.changeContent({ task: e.target.value })}
+                onChange={e => this.changeContent({ title: e.target.value })}
               />
+            </Col>
+            <Col sm={7} offset={1}>
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder="选择文档样式"
+                optionFilterProp="children"
+                onChange={value => this.changeContent({ style: value })}
+              >
+                {markdownStyle.map(item => <Option value={item}>{item}</Option>)}
+              </Select>
+            </Col>
+            <Col sm={7} offset={1}>
+              <a href={markdownPath} target="_blank" without rel="noopener noreferrer">
+                查看文档样式库
+              </a>
             </Col>
           </Row>
           <Row className={styles.docContainer}>
@@ -110,13 +142,19 @@ export default class Document extends PureComponent {
                   this.right = node;
                 }}
                 className={styles.docContent}
+                style={{ background: 'rgba(255, 193, 7, 0.13)' }}
                 onWheel={e => this.wheelHandler(e, 'right')}
                 onScroll={e => this.wheelHandler(e, 'right')}
                 dangerouslySetInnerHTML={{ __html: previewContent }}
               />
             </Col>
           </Row>
-          <Button type="primary">提交</Button>
+          <Button type="primary" onClick={() => this.saveDoc()}>
+            提交
+          </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button type="primary" onClick={() => this.saveDoc('preview')}>
+            预览
+          </Button>
         </Card>
       </PageHeaderLayout>
     );

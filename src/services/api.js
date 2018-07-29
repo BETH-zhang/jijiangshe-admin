@@ -3,14 +3,33 @@ import assign from 'lodash/assign';
 import request, { get, post } from '../utils/request';
 import config from '../common/config';
 
-export const queryAllList = data =>
+export const getDocs = data =>
   get({
+    url: '/api/doc/list',
+    data: {
+      ...data,
+      token: config.token,
+    },
+  });
+
+export async function createDoc(data) {
+  return post({
+    url: `/api/doc/create?${stringify({
+      token: config.token,
+    })}`,
+    data,
+  });
+}
+
+export async function queryAllList(data) {
+  return get({
     url: '/api/common/gets',
     data: {
       ...data,
       token: config.token,
     },
   });
+}
 
 export async function queryDetail(data) {
   return get({
