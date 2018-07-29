@@ -60,6 +60,8 @@ module.exports = {
     'function-paren-newline': [0],
     'no-restricted-globals': [0],
     'require-yield': [1],
+    'prefer-destructuring': [0],
+    'react/no-danger': [0],
   },
   parserOptions: {
     ecmaFeatures: {
