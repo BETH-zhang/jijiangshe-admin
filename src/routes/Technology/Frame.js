@@ -55,11 +55,17 @@ export default class Document extends PureComponent {
 
   changeContentLink = e => {
     const link = e.target.value;
-    const ma = document.createElement('script');
-    ma.type = 'text/javascript';
-    ma.async = true;
-    ma.src = link;
-    document.body.appendChild(ma);
+    const scriptFrame = document.getElementById('scriptFrame');
+    if (scriptFrame) {
+      scriptFrame.src = link;
+    } else {
+      const ma = document.createElement('script');
+      ma.type = 'text/javascript';
+      ma.id = 'scriptFrame';
+      ma.async = true;
+      ma.src = link;
+      document.body.appendChild(ma);
+    }
     this.changeContent({ newFrameLink: link });
   };
 
@@ -115,8 +121,8 @@ export default class Document extends PureComponent {
               <Button onClick={this.changeFrame}>添加库</Button>
             </Col>
           </Row>
-          <Row>
-            <Col sm={12}>
+          <Row style={{ marginTop: '20px' }}>
+            <Col sm={6}>
               {data &&
                 allFrames[data] &&
                 Object.keys(allFrames[data]).map(key => (
@@ -135,7 +141,7 @@ export default class Document extends PureComponent {
                   </div>
                 ))}
             </Col>
-            <Col sm={12}>
+            <Col sm={18}>
               {data &&
                 allFrames[data] && (
                   <h2>

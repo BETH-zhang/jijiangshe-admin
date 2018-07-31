@@ -26,8 +26,12 @@ import setprototypeof from 'setprototypeof';
 })();
 
 /**
- * https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js
- *
+ https://cdn.bootcss.com/lozad.js/1.4.0/lozad.js
+ https://cdn.bootcss.com/redux/4.0.0/redux.js
+ https://cdn.bootcss.com/redux-saga/1.0.0-beta.1/redux-saga.js
+ https://cdn.bootcss.com/impress.js/0.5.3/impress.js
+ https://cdn.bootcss.com/require.js/2.3.5/require.js
+ https://cdn.bootcss.com/d3/4.13.0/d3.js
  */
 export const frames = {
   window,

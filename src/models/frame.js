@@ -18,6 +18,7 @@ export default {
     },
     addFrame(state) {
       const newFrame = window[state.newFrame];
+      console.log(newFrame, typeof newFrame);
       return {
         data: state.newFrame,
         newFrame: '',
@@ -25,7 +26,7 @@ export default {
         newFrames: {
           [state.newFrame]: {
             default: newFrame,
-            defaultExecute: newFrame(),
+            // defaultExecute: newFrame(),
           },
         },
       };
