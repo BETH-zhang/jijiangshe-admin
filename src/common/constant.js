@@ -1,4 +1,81 @@
 import lodash from 'lodash';
+import React from 'react';
+import moment from 'moment';
+import * as reactRouter from 'react-router';
+import classNames from 'classnames';
+import numeral from 'numeral';
+import * as dva from 'dva';
+import * as dvaRouter from 'dva/router';
+import qs from 'qs';
+import dvaFetch from 'dva/fetch';
+import axios from 'axios';
+import url from 'url';
+import pathToRegexp from 'path-to-regexp';
+import loadable from 'react-loadable';
+import dataSet from '@antv/data-set';
+import propTypes from 'prop-types';
+import * as createHistory from 'history';
+import * as dvaLoading from 'dva-loading';
+import setprototypeof from 'setprototypeof';
+
+(() => {
+  const cvsEle = document.createElement('canvas');
+  document.body.appendChild(cvsEle);
+  const svgEle = document.createElement('svg');
+  document.body.appendChild(svgEle);
+})();
+
+/**
+ * https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js
+ *
+ */
+export const frames = {
+  window,
+  console,
+  lodash,
+  react: React,
+  reactRouter,
+  moment,
+  classNames,
+  numeral,
+  dva,
+  dvaRouter,
+  dvaFetch,
+  dvaLoading,
+  createHistory,
+  axios,
+  qs,
+  url,
+  pathToRegexp,
+  loadable,
+  dataSet,
+  propTypes,
+  canvas: (() => {
+    const cvs = document.getElementsByTagName('canvas')[0];
+    return { default: cvs, getContext: cvs.getContext('2d') };
+  })(),
+  svg: (() => {
+    const svg = document.getElementsByTagName('svg')[0];
+    return { default: svg };
+  })(),
+  setprototypeof: { default: setprototypeof },
+  string: (() => {
+    const a = 'beth';
+    return { default: a };
+  })(),
+  array: (() => {
+    const a = ['beth'];
+    return { default: a };
+  })(),
+  object: (() => {
+    const a = { name: 'beth' };
+    return { default: a };
+  })(),
+  number: (() => {
+    const a = 100;
+    return { default: a };
+  })(),
+};
 
 export const markdownStyle = [
   'markdown',
@@ -19,12 +96,3 @@ export const markdownStyle = [
   'screen',
   'swiss',
 ];
-
-export const frames = {
-  window,
-  string: String.prototype,
-  array: Array.prototype,
-  object: Object.prototype,
-  number: Number.prototype,
-  lodash,
-};

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Row, Col, Select } from 'antd';
+import { Card, Row, Col, Select, Input, Button } from 'antd';
+import assign from 'lodash/assign';
 import marked from '../../assets/marked.min';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { frames } from '../../common/constant';
@@ -31,16 +32,16 @@ export default class Document extends PureComponent {
   getPreviewContent = content => {
     if (content) {
       const html = marked(content, markedOptions);
-      return html.replace(/language-/g, 'hljs language-');
+      return html.replace(
+        /class="language-/g,
+        'style="overflow-x: auto;padding: 20px" class="hljs language-'
+      );
     }
     return null;
   };
 
   getFunContent = (funcName, data) => {
-    const tmp = '```';
-    console.log(data[funcName], '===');
-    const func = parseFunc(data[funcName]);
-    const content = func && `${tmp}js\n${func}\n${tmp}`;
+    const content = parseFunc(funcName, data);
     return this.getPreviewContent(content);
   };
 
@@ -52,16 +53,34 @@ export default class Document extends PureComponent {
     });
   };
 
+  changeContentLink = e => {
+    const link = e.target.value;
+    const ma = document.createElement('script');
+    ma.type = 'text/javascript';
+    ma.async = true;
+    ma.src = link;
+    document.body.appendChild(ma);
+    this.changeContent({ newFrameLink: link });
+  };
+
+  changeFrame = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'frame/addFrame',
+    });
+  };
+
   render() {
     const {
-      frame: { data, funcName, previewContent },
+      frame: { data, funcName, previewContent, newFrame, newFrameLink, newFrames },
     } = this.props;
-    console.log(data, frames[data], data && frames[data] && Object.keys(frames[data]));
+
+    const allFrames = assign(newFrames, frames);
     return (
       <PageHeaderLayout title="查看各种类库，长点心吧！" content="没有永远的框架，只有永远的类库。">
         <Card bordered={false}>
           <Row>
-            <Col sm={7}>
+            <Col sm={4}>
               <Select
                 showSearch
                 style={{ width: 200 }}
@@ -75,22 +94,39 @@ export default class Document extends PureComponent {
                   })
                 }
               >
-                {Object.keys(frames).map(key => <Option value={key}>{key}</Option>)}
+                {Object.keys(allFrames).map(key => <Option value={key}>{key}</Option>)}
               </Select>
+            </Col>
+            <Col sm={4} offset={1}>
+              <Input
+                placeholder="添加js库名"
+                value={newFrame}
+                onChange={e => this.changeContent({ newFrame: e.target.value })}
+              />
+            </Col>
+            <Col sm={4} offset={1}>
+              <Input
+                placeholder="添加js库链接"
+                value={newFrameLink}
+                onChange={this.changeContentLink}
+              />
+            </Col>
+            <Col sm={4} offset={1}>
+              <Button onClick={this.changeFrame}>添加库</Button>
             </Col>
           </Row>
           <Row>
             <Col sm={12}>
               {data &&
-                frames[data] &&
-                Object.keys(frames[data]).map(key => (
+                allFrames[data] &&
+                Object.keys(allFrames[data]).map(key => (
                   <div style={{ display: 'inline-block', marginRight: '20px' }}>
                     <a
                       style={{ color: key === funcName ? 'red' : '' }}
                       onClick={() =>
                         this.changeContent({
                           funcName: key,
-                          previewContent: this.getFunContent(key, frames[data]),
+                          previewContent: this.getFunContent(key, allFrames[data]),
                         })
                       }
                     >
@@ -101,17 +137,19 @@ export default class Document extends PureComponent {
             </Col>
             <Col sm={12}>
               {data &&
-                frames[data] && (
+                allFrames[data] && (
                   <h2>
                     {data}包含
-                    <span style={{ color: 'red' }}>{Object.keys(frames[data]).length}</span>个方法
+                    <span style={{ color: 'red' }}>
+                      {Object.keys(allFrames[data]).length}
+                    </span>个方法
                   </h2>
                 )}
               {funcName && (
                 <p>
-                  {`【key：${funcName}】【typeof: ${typeof frames[data][
+                  {`【key：${funcName}】【typeof: ${typeof allFrames[data][
                     funcName
-                  ]}】【Function: ${frames[data][funcName] instanceof Function}】`}
+                  ]}】【Function: ${allFrames[data][funcName] instanceof Function}】`}
                 </p>
               )}
               <div dangerouslySetInnerHTML={{ __html: previewContent }} />

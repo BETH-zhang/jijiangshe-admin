@@ -16,5 +16,19 @@ export default {
         ...action.payload,
       };
     },
+    addFrame(state) {
+      const newFrame = window[state.newFrame];
+      return {
+        data: state.newFrame,
+        newFrame: '',
+        newFrameLink: '',
+        newFrames: {
+          [state.newFrame]: {
+            default: newFrame,
+            defaultExecute: newFrame(),
+          },
+        },
+      };
+    },
   },
 };

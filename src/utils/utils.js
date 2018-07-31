@@ -2,8 +2,11 @@ import moment from 'moment';
 import { parse, stringify } from 'qs';
 import attempt from 'lodash/attempt';
 import sortBy from 'lodash/sortBy';
-import isFunction from 'lodash/isFunction';
+// import isFunction from 'lodash/isFunction';
+// import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
+import isSymbol from 'lodash/isSymbol';
+import get from 'lodash/get';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -122,6 +125,10 @@ function getRelation(str1, str2) {
     return 2;
   }
   return 3;
+}
+
+function isFunction(value) {
+  return typeof value === 'function' && value instanceof Function;
 }
 
 function getRenderArr(routes) {
@@ -352,15 +359,60 @@ export const urlEncode = (param, key, encode) => {
   return paramStr.substr(1);
 };
 
-export const parseFunc = func => {
-  if (isFunction(func)) {
-    console.log('function');
-    return func.toString();
-  } else if (isObject(func)) {
-    console.log('object');
-    return JSON.stringify(func).replace(/,/g, ',\n ');
+const getFuncMd = (funcName, data, proto) => {
+  const defaultFunc = data[funcName];
+  let func = defaultFunc;
+  if (proto) {
+    func = get(defaultFunc, proto);
   }
-  return func;
+  const tmp = '```';
+  const funcObj = {};
+  const funcAry = [];
+  const funcs = Object.keys(func);
+  if (funcs.length) {
+    funcs.forEach(item => {
+      let obj = defaultFunc[item];
+      if (isFunction(defaultFunc[item])) {
+        obj = '----- 向下看方法函数体 -----';
+        funcAry.push(`## ${item}\n${tmp}js\n${defaultFunc[item].toString()}\n${tmp}`);
+      } else if (isObject(defaultFunc[item])) {
+        obj = item;
+      }
+      funcObj[item] = obj;
+    });
+  }
+  return [`${tmp}js\n${JSON.stringify(funcObj).replace(/,/g, ',\n ')}\n${tmp}`].concat(funcAry);
+};
+
+export const parseFunc = (funcName, data) => {
+  const tmp = '```';
+  // console.log(funcName, data);
+  const func = data[funcName];
+  const isFunc = isFunction(func);
+  if (isSymbol(func)) {
+    return `${tmp}js\n${String(func)}\n${tmp}`;
+  } else if (isFunc) {
+    return `${tmp}js\n${func.toString()}\n${tmp}`;
+  } else if (isObject(func)) {
+    console.log(func, '///');
+    const defaultAry = getFuncMd(funcName, data);
+    const proto1 = get(func, ['__proto__']);
+    const protoAry1 = proto1 ? getFuncMd(funcName, data, ['__proto__']) : [];
+    const proto2 = get(func, ['__proto__', '__proto__']);
+    const protoAry2 = proto2 ? getFuncMd(funcName, data, ['__proto__', '__proto__']) : [];
+    const proto3 = get(func, ['__proto__', '__proto__', '__proto__']);
+    const protoAry3 = proto3
+      ? getFuncMd(funcName, data, ['__proto__', '__proto__', '__proto__'])
+      : [];
+
+    const ary = defaultAry
+      .concat([`# --proto--${proto1 && String(Symbol(proto1))}`], protoAry1)
+      .concat([`# --proto--${proto2 && String(Symbol(proto2))}`], protoAry2)
+      .concat([`# --proto--${proto3 && String(Symbol(proto3))}`], protoAry3);
+    return `${ary.join('\n')}`;
+  }
+  console.log('///', typeof func, func);
+  return `${tmp}js\n${String(func)}\n${tmp}`;
 };
 
 export const loopPrint = link => {
