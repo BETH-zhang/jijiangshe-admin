@@ -3,6 +3,7 @@ import { parse, stringify } from 'qs';
 import attempt from 'lodash/attempt';
 import sortBy from 'lodash/sortBy';
 import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -349,4 +350,23 @@ export const urlEncode = (param, key, encode) => {
     });
   }
   return paramStr.substr(1);
+};
+
+export const parseFunc = func => {
+  if (isFunction(func)) {
+    console.log('function');
+    return func.toString();
+  } else if (isObject(func)) {
+    console.log('object');
+    return JSON.stringify(func).replace(/,/g, ',\n ');
+  }
+  return func;
+};
+
+export const loopPrint = link => {
+  // 需要更多的内容
+  const pwin = window.open(link, 'print'); // 如果是本地测试，需要先新建Print.htm，如果是在域中使用，则不需要
+  // // pwin.document.write(printStr);
+  // pwin.document.close();// 这句很重要，没有就无法实现
+  pwin.print();
 };

@@ -3,6 +3,11 @@ import assign from 'lodash/assign';
 import request, { get, post } from '../utils/request';
 import config from '../common/config';
 
+export const getHtml = data =>
+  get({
+    url: data.url,
+  });
+
 export const getDocs = data =>
   get({
     url: '/api/doc/list',

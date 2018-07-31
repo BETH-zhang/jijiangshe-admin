@@ -154,6 +154,9 @@ export default class Document extends PureComponent {
           </Button>&nbsp;&nbsp;&nbsp;&nbsp;
           <Button type="primary" onClick={() => this.saveDoc('preview')}>
             预览
+          </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button type="primary" onClick={() => this.saveDoc('print')}>
+            打印
           </Button>
         </Card>
       </PageHeaderLayout>

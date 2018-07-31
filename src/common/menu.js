@@ -30,6 +30,10 @@ const menuData = [
         name: '文档库',
         path: 'document',
       },
+      {
+        name: '前端库',
+        path: 'frame',
+      },
     ],
   },
   {

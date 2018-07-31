@@ -2,6 +2,7 @@ import { message } from 'antd';
 // import sortBy from 'lodash/sortBy';
 import { queryAllList, createDoc, updateDetail, deleteItem } from '../services/api';
 import config from '../common/config';
+import { loopPrint } from '../utils/utils';
 
 export default {
   namespace: 'docs',
@@ -31,8 +32,10 @@ export default {
       } = yield select();
       const { response } = yield call(createDoc, { ...data, ...payload });
       if (response) {
-        if (response.preview) {
+        if (payload.preview === 'preview') {
           window.open(`${config.api}${response.preview}`);
+        } else if (payload.preview === 'print') {
+          loopPrint(`${config.api}${response.preview}`);
         } else {
           message.info('添加成功');
         }

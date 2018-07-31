@@ -35,6 +35,7 @@ const dynamicWrapper = (app, models, component) => {
       });
     };
   }
+
   // () => import('module')
   return Loadable({
     loader: () => {
@@ -82,6 +83,9 @@ export const getRouterData = app => {
     },
     '/technology/document': {
       component: dynamicWrapper(app, ['docs'], () => import('../routes/Technology/Document')),
+    },
+    '/technology/frame': {
+      component: dynamicWrapper(app, ['frame'], () => import('../routes/Technology/Frame')),
     },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),

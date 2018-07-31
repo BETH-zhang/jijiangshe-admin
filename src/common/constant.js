@@ -1,3 +1,5 @@
+import lodash from 'lodash';
+
 export const markdownStyle = [
   'markdown',
   'markdown-black',
@@ -17,3 +19,12 @@ export const markdownStyle = [
   'screen',
   'swiss',
 ];
+
+export const frames = {
+  window,
+  string: String.prototype,
+  array: Array.prototype,
+  object: Object.prototype,
+  number: Number.prototype,
+  lodash,
+};
