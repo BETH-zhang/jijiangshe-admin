@@ -26,7 +26,7 @@ export default {
         });
       }
     },
-    *fetchAddDoc({ payload }, { call, select }) {
+    *fetchAddDoc({ payload }, { call, select, put }) {
       const {
         docs: { data },
       } = yield select();
@@ -38,6 +38,9 @@ export default {
           loopPrint(`${config.api}${response.preview}`);
         } else {
           message.info('添加成功');
+          yield put({
+            type: 'docs/fetchDocs',
+          });
         }
       }
     },
@@ -46,7 +49,7 @@ export default {
       if (response) {
         message.info('更新成功');
         yield put({
-          type: 'tasks/fetchDocs',
+          type: 'docs/fetchDocs',
         });
       }
     },
@@ -55,7 +58,7 @@ export default {
       if (response) {
         message.info('删除成功');
         yield put({
-          type: 'tasks/fetchDocs',
+          type: 'docs/fetchDocs',
         });
       }
     },
