@@ -78,6 +78,9 @@ export const getRouterData = app => {
     '/technology/links': {
       component: dynamicWrapper(app, ['links', 'tags'], () => import('../routes/Technology/Links')),
     },
+    '/technology/share': {
+      component: dynamicWrapper(app, ['share'], () => import('../routes/Technology/Share')),
+    },
     '/technology/tasks': {
       component: dynamicWrapper(app, ['tasks', 'tags'], () => import('../routes/Technology/Tasks')),
     },
