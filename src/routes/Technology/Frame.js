@@ -78,7 +78,7 @@ export default class Document extends PureComponent {
 
   render() {
     const {
-      frame: { data, funcName, previewContent, newFrame, newFrameLink, newFrames },
+      frame: { data, funcName, previewContent, newFrame, newFrameType, newFrameLink, newFrames },
     } = this.props;
 
     const allFrames = assign(newFrames, frames);
@@ -102,6 +102,13 @@ export default class Document extends PureComponent {
               >
                 {Object.keys(allFrames).map(key => <Option value={key}>{key}</Option>)}
               </Select>
+            </Col>
+            <Col sm={4} offset={1}>
+              <Input
+                placeholder="添加库默认类型"
+                value={newFrameType}
+                onChange={e => this.changeContent({ newFrameType: e.target.value })}
+              />
             </Col>
             <Col sm={4} offset={1}>
               <Input
