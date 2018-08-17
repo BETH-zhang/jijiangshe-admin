@@ -32,6 +32,7 @@ import setprototypeof from 'setprototypeof';
  https://cdn.bootcss.com/impress.js/0.5.3/impress.js
  https://cdn.bootcss.com/require.js/2.3.5/require.js
  https://cdn.bootcss.com/d3/4.13.0/d3.js
+ https://cdn.bootcss.com/velocity/2.0.4/velocity.js
  */
 export const frames = {
   window,
