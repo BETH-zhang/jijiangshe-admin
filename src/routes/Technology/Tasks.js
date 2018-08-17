@@ -118,11 +118,12 @@ export default class Tasks extends PureComponent {
   };
 
   deleteTask = id => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'tasks/fetchDeleteTask',
-      payload: { id },
-    });
+    console.log(id);
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'tasks/fetchDeleteTask',
+    //   payload: { id },
+    // });
   };
 
   radioGroupChange = e => {
