@@ -83,6 +83,7 @@ export const frames = {
 };
 
 export const markdownStyle = [
+  'marxico',
   'markdown',
   'markdown-black',
   'markdown-alt',
