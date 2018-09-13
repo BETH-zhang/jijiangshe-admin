@@ -82,6 +82,7 @@ export default class Document extends PureComponent {
     } = this.props;
 
     const allFrames = assign(newFrames, frames);
+    // console.log('allFrames', allFrames, data)
     return (
       <PageHeaderLayout title="查看各种类库，长点心吧！" content="没有永远的框架，只有永远的类库。">
         <Card bordered={false}>

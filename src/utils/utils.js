@@ -6,6 +6,8 @@ import sortBy from 'lodash/sortBy';
 // import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import isSymbol from 'lodash/isSymbol';
+import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
 import get from 'lodash/get';
 
 export function fixedZero(val) {
@@ -368,7 +370,8 @@ const getFuncMd = (funcName, data, proto) => {
   const tmp = '```';
   const funcObj = {};
   const funcAry = [];
-  const funcs = Object.keys(func);
+  let funcs = Object.keys(func);
+  funcs = funcs.length ? funcs : Object.getOwnPropertyNames(func);
   if (funcs.length) {
     funcs.forEach(item => {
       let obj = defaultFunc[item];
@@ -393,7 +396,7 @@ export const parseFunc = (funcName, data) => {
     return `${tmp}js\n${String(func)}\n${tmp}`;
   } else if (isFunc) {
     return `${tmp}js\n${func.toString()}\n${tmp}`;
-  } else if (isObject(func)) {
+  } else if (isObject(func) || isString(func) || isNumber(func)) {
     console.log(func, '///');
     const defaultAry = getFuncMd(funcName, data);
     const proto1 = get(func, ['__proto__']);

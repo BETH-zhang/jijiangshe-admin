@@ -26,6 +26,8 @@ import setprototypeof from 'setprototypeof';
 })();
 
 /**
+ * https://www.bootcdn.cn/
+ https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js
  https://cdn.bootcss.com/lozad.js/1.4.0/lozad.js
  https://cdn.bootcss.com/redux/4.0.0/redux.js
  https://cdn.bootcss.com/redux-saga/1.0.0-beta.1/redux-saga.js
@@ -33,6 +35,7 @@ import setprototypeof from 'setprototypeof';
  https://cdn.bootcss.com/require.js/2.3.5/require.js
  https://cdn.bootcss.com/d3/4.13.0/d3.js
  https://cdn.bootcss.com/velocity/2.0.4/velocity.js
+ https://cdn.bootcss.com/three.js/92/three.js
  */
 export const frames = {
   window,
