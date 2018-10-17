@@ -33,6 +33,6 @@ const options = { threshold: 2048 };
 app.use(compress(options));
 
 app.use(router.routes());
-app.listen(8000);
+app.listen(7002);
 
-console.log('请访问: 8000');
+console.log('请访问: 7002');
