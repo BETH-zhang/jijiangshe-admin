@@ -9,6 +9,22 @@ const statics = require('koa-static-cache');
 const app = new Koa();
 const router = new Router();
 
+const promisify = nodeFunction => {
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      nodeFunction.call(this, ...args, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  };
+};
+
+const rendFile = promisify(fs.readFile);
+
 const ROOT_DIR = path.resolve();
 
 router.get('/healthCheck', async ctx => {
@@ -18,7 +34,8 @@ router.get('/healthCheck', async ctx => {
 
 router.get('*', async ctx => {
   console.log(ctx.originalUrl);
-  ctx.body = await fs.readFile(path.resolve(__dirname, './dist/index.html'), 'utf8');
+  const data = await rendFile(path.resolve(__dirname, './dist/index.html'), 'utf8');
+  ctx.response.body = data;
 });
 
 app.use(bodyParser({ formLimit: '2mb' }));
