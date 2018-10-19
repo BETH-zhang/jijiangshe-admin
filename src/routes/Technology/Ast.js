@@ -165,7 +165,9 @@ export default class AST extends PureComponent {
     const {
       ast: { content },
     } = this.props;
-    console.log(content);
+
+    const ele = document.querySelector('g');
+    ele.innerHTML = '';
     const data = this.formatData(acorn.parse(content));
     console.log('data', data);
     this.createD3(data);
@@ -181,6 +183,7 @@ export default class AST extends PureComponent {
           <Row>
             <Col sm={12}>
               <Button onClick={this.handleClick}>解析</Button>
+              <div>{content}</div>
               <div
                 className={styles.docContent}
                 style={{ border: '1px solid #ccc', height: '500px' }}
