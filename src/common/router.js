@@ -90,6 +90,9 @@ export const getRouterData = app => {
     '/technology/frame': {
       component: dynamicWrapper(app, ['frame'], () => import('../routes/Technology/Frame')),
     },
+    '/technology/ast': {
+      component: dynamicWrapper(app, ['ast'], () => import('../routes/Technology/Ast')),
+    },
     '/dashboard/analysis': {
       component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
     },

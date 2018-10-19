@@ -36,6 +36,7 @@ import setprototypeof from 'setprototypeof';
  https://cdn.bootcss.com/d3/4.13.0/d3.js
  https://cdn.bootcss.com/velocity/2.0.4/velocity.js
  https://cdn.bootcss.com/three.js/92/three.js
+ https://d3js.org/d3.v3.js
  */
 export const frames = {
   window,
@@ -83,6 +84,8 @@ export const frames = {
     const a = 100;
     return { default: a };
   })(),
+  math: { default: window.Math },
+  regexp: { default: window.RegExp },
 };
 
 export const markdownStyle = [
