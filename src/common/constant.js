@@ -63,6 +63,17 @@ export const frames = {
     const cvs = document.getElementsByTagName('canvas')[0];
     return { default: cvs, getContext: cvs.getContext('2d') };
   })(),
+  canvasGL: (() => {
+    const cvs = document.createElement('canvas');
+    return {
+      default: cvs,
+      getContext: cvs.getContext('webgl') || cvs.getContext('experimental-webgl'),
+    };
+  })(),
+  canvasGL2: (() => {
+    const cvs = document.createElement('canvas');
+    return { default: cvs, getContext: cvs.getContext('webgl2') };
+  })(),
   svg: (() => {
     const svg = document.getElementsByTagName('svg')[0];
     return { default: svg };
