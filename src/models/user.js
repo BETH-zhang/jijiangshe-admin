@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent } from '../services/user';
+import { query as queryUsers } from '../services/user';
 
 export default {
   namespace: 'user',
@@ -16,8 +16,23 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent(_, { put }) {
+      const response = {
+        $desc: '获取当前用户接口',
+        $params: {
+          pageSize: {
+            desc: '分页',
+            exp: 2,
+          },
+        },
+        $body: {
+          name: 'Beth',
+          avatar: './src/assets/beth.jpeg',
+          userid: '00000001',
+          notifyCount: 12,
+        },
+      };
+
       yield put({
         type: 'saveCurrentUser',
         payload: response,
