@@ -97,6 +97,7 @@ export const frames = {
   })(),
   math: { default: window.Math },
   regexp: { default: window.RegExp },
+  date: { default: new Date() },
 };
 
 export const markdownStyle = [
