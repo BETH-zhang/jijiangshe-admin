@@ -63,8 +63,9 @@ export const frames = {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     return {
       default: audioCtx,
-      oscillator: audioCtx.createOscillator(),
-      gainNode: audioCtx.createGain(),
+      createOscillator: audioCtx.createOscillator(),
+      createGain: audioCtx.createGain(),
+      'GainNode.gain': audioCtx.createGain().gain,
     };
   })(),
   canvas: (() => {
