@@ -59,6 +59,14 @@ export const frames = {
   loadable,
   dataSet,
   propTypes,
+  audioContext: (() => {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return {
+      default: audioCtx,
+      oscillator: audioCtx.createOscillator(),
+      gainNode: audioCtx.createGain(),
+    };
+  })(),
   canvas: (() => {
     const cvs = document.getElementsByTagName('canvas')[0];
     return { default: cvs, getContext: cvs.getContext('2d') };
